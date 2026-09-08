@@ -1,7 +1,7 @@
 const TEXTS = {
   about: {
     title: "О проекте",
-    body: "Мы — аграрный центр Томской области. Консультируем представителей малого агробизнеса. Раздел скоро будет наполнен.",
+    body: "Мы — аграрный центр Томской области. Консультируем представителей малого агробизнеса.\n\nРаздел скоро будет наполнен.",
   },
   news: {
     title: "Новости АПК",
@@ -9,7 +9,7 @@ const TEXTS = {
   },
   events: {
     title: "Календарь мероприятий",
-    body: "Ближайшие семинары и встречи — в следующих версиях приложения.",
+    body: "Ближайшие семинары и встречи появятся в следующих версиях.",
   },
   seminars: {
     title: "Семинары и обучение",
@@ -17,7 +17,7 @@ const TEXTS = {
   },
   consult: {
     title: "Запись на консультацию",
-    body: "Форма записи будет добавлена. Пока напишите боту в чат.",
+    body: "Форма записи будет добавлена.\nПока напишите боту в чат.",
   },
   materials: {
     title: "Полезные материалы",
@@ -29,11 +29,11 @@ const TEXTS = {
   },
   mydata: {
     title: "Мои данные",
-    body: "Email и настройки профиля будут доступны здесь после интеграции с ботом.",
+    body: "Email и настройки профиля появятся после интеграции с ботом.",
   },
 };
 
-const menu = document.querySelector(".menu");
+const menu = document.getElementById("menu");
 const panel = document.getElementById("panel");
 const panelTitle = document.getElementById("panel-title");
 const panelBody = document.getElementById("panel-body");
@@ -46,17 +46,13 @@ function showPanel(key) {
   panelBody.textContent = data.body;
   menu.classList.add("hidden");
   panel.classList.remove("hidden");
-  if (window.WebApp?.BackButton) {
-    window.WebApp.BackButton.show();
-  }
+  try { window.WebApp?.BackButton?.show?.(); } catch (_) {}
 }
 
 function showMenu() {
   panel.classList.add("hidden");
   menu.classList.remove("hidden");
-  if (window.WebApp?.BackButton) {
-    window.WebApp.BackButton.hide();
-  }
+  try { window.WebApp?.BackButton?.hide?.(); } catch (_) {}
 }
 
 menu.addEventListener("click", (e) => {
@@ -67,11 +63,9 @@ menu.addEventListener("click", (e) => {
 
 btnBack.addEventListener("click", showMenu);
 
-if (window.WebApp) {
-  try {
-    window.WebApp.ready?.();
-    window.WebApp.BackButton?.onClick?.(showMenu);
-  } catch (e) {
-    console.warn(e);
-  }
+try {
+  window.WebApp?.ready?.();
+  window.WebApp?.BackButton?.onClick?.(showMenu);
+} catch (e) {
+  console.warn(e);
 }
