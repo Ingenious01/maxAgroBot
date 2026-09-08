@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Томский агробизнес</title>
+  <script src="https://st.max.ru/js/max-web-app.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>Томский агробизнес</h1>
+    <p class="subtitle">Главное меню</p>
+  </header>
+
+  <nav class="menu">
+    <button class="item" data-section="about">ℹ️ О проекте</button>
+    <button class="item" data-section="news">📰 Новости АПК</button>
+    <button class="item" data-section="events">📅 Календарь мероприятий</button>
+    <button class="item" data-section="seminars">🎓 Семинары и обучение</button>
+    <button class="item" data-section="consult">💬 Запись на консультацию</button>
+    <button class="item" data-section="materials">📁 Полезные материалы</button>
+    <button class="item" data-section="contacts">📞 Контакты</button>
+    <a class="item link" href="https://vk.ru/agro_tomsk" target="_blank" rel="noopener">📣 Канал ВКонтакте</a>
+    <button class="item" data-section="mydata">⚙️ Мои данные</button>
+  </nav>
+
+  <section id="panel" class="panel hidden">
+    <button type="button" class="back" id="btn-back">← Назад</button>
+    <h2 id="panel-title"></h2>
+    <p id="panel-body"></p>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

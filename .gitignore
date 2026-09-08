@@ -1,0 +1,22 @@
+# Секреты
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Данные пользователей (не в git)
+subscribers.json
+states.json
+leads.json
+
+# Логи и мусор
+*.log
+.DS_Store
+Thumbs.db
