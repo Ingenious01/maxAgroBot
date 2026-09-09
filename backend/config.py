@@ -65,7 +65,7 @@ POLICY_URL = os.environ.get(
 
 PRIVACY_POLICY_FILE = os.path.join(
     PROJECT_ROOT,
-    "docs",
+    "webapp",
     "privacy_policy.pdf"
 )
 
