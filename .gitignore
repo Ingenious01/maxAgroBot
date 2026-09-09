@@ -15,6 +15,7 @@ build/
 subscribers.json
 states.json
 leads.json
+users.json
 
 # Логи и мусор
 *.log

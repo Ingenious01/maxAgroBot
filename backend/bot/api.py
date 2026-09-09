@@ -1,7 +1,7 @@
 import os
 import time
 import requests
-from config import API_BASE, BOT_TOKEN
+from backend.config import API_BASE, BOT_TOKEN
 
 HEADERS = {
     "Authorization": BOT_TOKEN,
@@ -26,7 +26,9 @@ def get_updates(marker: int | None = None, timeout: int = 30) -> dict:
                 params=params,
                 timeout=timeout + 15,  # чуть больше server timeout
             )
-            resp.raise_for_status()
+            if not resp.ok:
+                print(f"[api] Ошибка MAX {resp.status_code}: {resp.text}")
+                resp.raise_for_status()
             return resp.json()
         except (requests.exceptions.SSLError,
                 requests.exceptions.ConnectionError,
@@ -68,7 +70,9 @@ def send_message(
         json=body,
         timeout=15,
     )
-    resp.raise_for_status()
+    if not resp.ok:
+        print(f"[api] Ошибка MAX {resp.status_code}: {resp.text}")
+        resp.raise_for_status()
     return resp.json()
 
 
@@ -148,7 +152,9 @@ def send_file(chat_id: int, path: str, caption: str = "") -> dict:
             if "attachment.not.ready" in (resp.text or ""):
                 _time.sleep(delay)
                 continue
-            resp.raise_for_status()
+            if not resp.ok:
+                print(f"[api] Ошибка MAX {resp.status_code}: {resp.text}")
+                resp.raise_for_status()
         except requests.RequestException:
             _time.sleep(delay)
     raise RuntimeError("Не удалось отправить файл политики")

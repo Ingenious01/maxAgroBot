@@ -1,4 +1,14 @@
 import os
+from dotenv import load_dotenv
+
+
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..")
+)
+
+load_dotenv(
+    os.path.join(PROJECT_ROOT, ".env")
+)
 
 BOT_TOKEN = os.environ.get("MAX_BOT_TOKEN")
 if not BOT_TOKEN:
@@ -8,21 +18,61 @@ if not BOT_TOKEN:
         '$env:MAX_BOT_TOKEN=\"токен\"; python bot.py'
     )
 
-ADMIN_IDS = [
+# Администраторы
+ADMIN_IDS = {
     236862264,
     339836365,
-]
+}
+
+# Разработчики
+DEVELOPER_IDS = {
+    339836365,  # временно для тестирования
+}
+
+DB_SERVER = os.environ.get("DB_SERVER", "localhost")
+DB_PORT = int(os.environ.get("DB_PORT", "1433"))
+DB_NAME = os.environ.get("DB_NAME", "MaxBot")
+DB_DRIVER = os.environ.get(
+    "DB_DRIVER",
+    "ODBC Driver 17 for SQL Server",
+)
+DB_TRUSTED_CONNECTION = (
+    os.environ.get("DB_TRUSTED_CONNECTION", "yes").lower() == "yes"
+)
+DB_USER = os.environ.get("DB_USER")
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
+
+
+def is_admin(user_id: int | None) -> bool:
+    return user_id in ADMIN_IDS
+
+
+def is_developer(user_id: int | None) -> bool:
+    return user_id in DEVELOPER_IDS or user_id in ADMIN_IDS
 
 API_BASE = "https://platform-api2.max.ru"
 
-SUBSCRIBERS_FILE = os.path.join(os.path.dirname(__file__), "subscribers.json")
+SUBSCRIBERS_FILE = os.path.join(
+    PROJECT_ROOT,
+    "data",
+    "subscribers.json"
+)
 
 POLICY_URL = os.environ.get(
     "POLICY_URL",
     "https://store.steampowered.com/?l=russian",  # потом замени на реальную политику
 )
 
-PRIVACY_POLICY_FILE = os.path.join(os.path.dirname(__file__), "privacy_policy.pdf")
+PRIVACY_POLICY_FILE = os.path.join(
+    PROJECT_ROOT,
+    "docs",
+    "privacy_policy.pdf"
+)
+
+MINIAPP_URL = os.environ.get(
+    "MINIAPP_URL",
+    "https://ingenious01.github.io/maxAgroBot/",
+)
 
 if POLICY_URL:
     _policy_phrase = f"[условия политики обработки персональных данных]({POLICY_URL})"
@@ -56,12 +106,9 @@ ASK_CONTACT_TEXT = (
     "На него будем присылать анонсы и полезные материалы."
 )
 
-CONTACT_SAVED_TEXT = (
-    "Спасибо! Email сохранён. 🎉\n"
-    "Открываю главное меню."
-)
+CONTACT_SAVED_TEXT = "Спасибо! Email сохранён. 🎉"
 
-CONTACT_SKIP_TEXT = "Хорошо, продолжаем без email. Открываю главное меню."
+CONTACT_SKIP_TEXT = "Хорошо, продолжаем без email."
 
 CONTACT_CANCEL_TEXT = "Хорошо, данные не сохранены."
 
@@ -77,18 +124,18 @@ AFTER_CONSENT_BUTTONS = [
     [VK_BUTTON],
 ]
 
-MAIN_MENU_TEXT = "📌 Главное меню\n\nВыберите раздел:"
+MAIN_MENU_TEXT = (
+    "Готово! 🌾\n\n"
+    "Основная работа с ботом ведётся через встроенное приложение MAX.\n\n"
+    "Нажмите кнопку ниже, чтобы открыть приложение."
+)
 
-MENU_STUB_TEXT = "Раздел «{title}» пока в разработке. Скоро здесь появится контент."
 
-MAIN_MENU_BUTTONS = [
-    [{"type": "callback", "text": "ℹ️ О проекте", "payload": "menu_about"}],
-    [{"type": "callback", "text": "📰 Новости АПК", "payload": "menu_news"}],
-    [{"type": "callback", "text": "📅 Календарь мероприятий", "payload": "menu_events"}],
-    [{"type": "callback", "text": "🎓 Семинары и обучение", "payload": "menu_seminars"}],
-    [{"type": "callback", "text": "💬 Запись на консультацию", "payload": "menu_consult"}],
-    [{"type": "callback", "text": "📁 Полезные материалы", "payload": "menu_materials"}],
-    [{"type": "callback", "text": "📞 Контакты", "payload": "menu_contacts"}],
-    [{"type": "callback", "text": "📣 Канал ВКонтакте", "payload": "menu_vk"}],
-    [{"type": "callback", "text": "⚙️ Мои данные (email)", "payload": "menu_my_data"}],
-]
+def main_menu_buttons() -> list:
+    return [[
+        {
+            "type": "open_app",
+            "text": "Открыть приложение",
+            "web_app": "id7017234465_bot",
+        }
+    ]]
