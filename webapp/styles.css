@@ -11,10 +11,21 @@ html, body {
   padding: 20px 16px 12px;
   border-bottom: 1px solid #243041;
 }
-.header h1 { margin: 0; font-size: 1.25rem; font-weight: 600; }
-.subtitle { margin: 6px 0 0; color: #8b9bb4; font-size: 0.9rem; }
-.menu { display: flex; flex-direction: column; padding: 8px 0 24px; }
-.menu.hidden { display: none; }
+.header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.subtitle {
+  margin: 6px 0 0;
+  color: #8b9bb4;
+  font-size: 0.9rem;
+}
+.menu {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0 24px;
+}
 .item {
   display: block;
   width: 100%;
@@ -28,16 +39,6 @@ html, body {
   cursor: pointer;
   text-decoration: none;
 }
-.item:active { background: #1a2332; }
-.panel { padding: 16px 18px 32px; }
-.panel.hidden { display: none; }
-.back {
-  border: none;
-  background: transparent;
-  color: #6cb6ff;
-  font-size: 0.95rem;
-  padding: 0 0 12px;
-  cursor: pointer;
+.item:active {
+  background: #1a2332;
 }
-#panel-title { margin: 0 0 10px; font-size: 1.15rem; }
-#panel-body { margin: 0; line-height: 1.5; color: #c5d0e0; white-space: pre-line; }
