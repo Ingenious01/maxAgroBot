@@ -11,6 +11,7 @@ from backend.storage.storage import (
     add_subscriber,
     load_subscribers,
     reset_user,
+    get_user,
 )
 
 

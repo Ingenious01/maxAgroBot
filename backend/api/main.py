@@ -13,6 +13,10 @@ from backend.storage.database import engine
 
 from sqlalchemy import text
 
+from backend.bot.api import send_message
+from backend.config import ASK_CONTACT_TEXT
+from backend.storage.storage import set_state
+
 
 app = FastAPI()
 
@@ -166,6 +170,58 @@ def authenticate(request: AuthRequest):
     except Exception as e:
         print(
             f"[api] Ошибка авторизации Mini App: {e}"
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Внутренняя ошибка сервера",
+        )
+
+@app.post("/api/profile/email/change")
+def change_email(request: AuthRequest):
+    try:
+        auth = validate_init_data(
+            request.initData
+        )
+
+        user_id = auth["user_id"]
+        chat_id = auth["chat_id"]
+
+        if chat_id is None:
+            raise ValueError(
+                "В initData отсутствует chat_id"
+            )
+
+        if not check_user_access(
+            user_id
+        ):
+            raise ValueError(
+                "Доступ пользователя не подтверждён"
+            )
+
+        set_state(
+            chat_id,
+            "wait_contact",
+        )
+
+        send_message(
+            chat_id,
+            ASK_CONTACT_TEXT,
+        )
+
+        return {
+            "success": True,
+        }
+
+    except ValueError as e:
+        raise HTTPException(
+            status_code=401,
+            detail=str(e),
+        )
+
+    except Exception as e:
+        print(
+            f"[api] Ошибка смены email: {e}"
         )
 
         raise HTTPException(

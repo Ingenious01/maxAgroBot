@@ -2,29 +2,236 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+
   <title>Томский агробизнес</title>
+
+  <script>
+    (() => {
+      const savedTheme = localStorage.getItem("theme");
+
+      const theme =
+        savedTheme === "light" || savedTheme === "dark"
+          ? savedTheme
+          : (
+              window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light"
+            );
+
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+
   <script src="https://st.max.ru/js/max-web-app.js"></script>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-  <header class="header">
-    <h1>Томский агробизнес</h1>
-    <p class="subtitle">Мероприятия</p>
-  </header>
 
-  <nav class="menu" id="menu">
-    <!-- Ссылки подставишь свои -->
-    <a class="item link" href="https://tom.stores-apple.com/catalog/smartfon-apple-iphone-17-256-gb-zelenyi/" target="_blank" rel="noopener">
-      📅 Мероприятие 1
-    </a>
-    <a class="item link" href="https://example.com/event-2" target="_blank" rel="noopener">
-      📅 Мероприятие 2
-    </a>
-    <a class="item link" href="https://example.com/event-3" target="_blank" rel="noopener">
-      📅 Мероприятие 3
-    </a>
-  </nav>
+<body>
+  <section
+    class="screen loading-screen"
+    id="loading-screen"
+  >
+    <div class="loading-logo-wrap">
+      <div class="loading-ring"></div>
+
+      <div class="loading-logo">
+        <img
+          src="assets/brand/logo-mark.svg"
+          alt="Аграрный центр"
+        />
+      </div>
+    </div>
+
+    <h1 class="loading-title">
+      Томский агробизнес
+    </h1>
+
+    <p class="loading-text">
+      Проверяем доступ
+    </p>
+
+    <div
+      class="loading-dots"
+      aria-hidden="true"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </section>
+
+  <section
+    class="screen gate-screen hidden"
+    id="gate-screen"
+  >
+    <div class="gate-icon">🔒</div>
+
+    <h1 class="gate-title">
+      Доступ пока закрыт
+    </h1>
+
+    <p class="gate-text">
+      Сначала завершите регистрацию
+      в чате с ботом «Томский агробизнес».
+    </p>
+  </section>
+
+  <main
+    class="app-shell hidden"
+    id="app-shell"
+  >
+    <header class="header">
+      <img
+        class="header-logo"
+        src="assets/brand/logo-mark.svg"
+        alt="Аграрный центр"
+      />
+
+      <div class="header-text">
+        <h1>Томский агробизнес</h1>
+      </div>
+
+      <button
+        type="button"
+        class="theme-toggle"
+        id="theme-toggle"
+        aria-label="Переключить тему"
+      >
+        <span
+          class="theme-icon theme-icon-sun"
+          id="theme-icon-sun"
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="4.2"></circle>
+            <path d="M12 2.5v2.2M12 19.3v2.2M21.5 12h-2.2M4.7 12H2.5M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6M18.7 18.7l-1.6-1.6M6.9 6.9L5.3 5.3"></path>
+          </svg>
+        </span>
+
+        <span
+          class="theme-icon theme-icon-moon"
+          id="theme-icon-moon"
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.2 14.8A7.7 7.7 0 0 1 9.2 4.8a7.8 7.8 0 1 0 10 10Z"></path>
+          </svg>
+        </span>
+      </button>
+    </header>
+
+    <section class="accordion-section">
+      <button
+        type="button"
+        class="accordion-header"
+        id="events-toggle"
+        aria-expanded="true"
+        aria-controls="events-content"
+      >
+        <span class="accordion-title">
+          Мероприятия
+        </span>
+
+        <span
+          class="accordion-chevron"
+          id="events-chevron"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M6 9l6 6 6-6"></path>
+          </svg>
+        </span>
+      </button>
+
+      <div
+        class="accordion-content"
+        id="events-content"
+      >
+        <nav class="menu" id="menu">
+          <a
+            class="item link"
+            href="https://svoefermerstvo.ru/farmers-way/school"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="item-icon">🎓</span>
+            <span>Школа фермера</span>
+
+            <span class="external-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M14 5h5v5"></path>
+                <path d="M19 5l-8 8"></path>
+                <path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path>
+              </svg>
+            </span>
+          </a>
+
+          <a
+            class="item link"
+            href="https://depagro.tomsk.gov.ru/pages/front/view?id=36556"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="item-icon">🍂</span>
+            <span>Золотая осень - 2026</span>
+
+            <span class="external-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M14 5h5v5"></path>
+                <path d="M19 5l-8 8"></path>
+                <path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path>
+              </svg>
+            </span>
+          </a>
+
+          <a
+            class="item link"
+            href="https://depagro.tomsk.gov.ru/news/front/view?id=171210"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="item-icon">🎨</span>
+            <span>Томские АГРОкраски</span>
+
+            <span class="external-icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M14 5h5v5"></path>
+                <path d="M19 5l-8 8"></path>
+                <path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path>
+              </svg>
+            </span>
+          </a>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+  <a
+    class="vk-button"
+    href="https://vk.ru/agro_tomsk"
+    target="_blank"
+    rel="noopener"
+    aria-label="Группа Томского агробизнеса во ВКонтакте"
+  >
+    <span>VK</span>
+  </a>
 
   <script src="app.js"></script>
 </body>
