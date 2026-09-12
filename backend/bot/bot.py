@@ -96,13 +96,6 @@ def open_main_menu(
     intro: str | None = None,
     user_id: int | None = None,
 ) -> None:
-    update_user(
-        chat_id,
-        max_user_id=user_id,
-        consent=True,
-        onboarded=True,
-    )
-
     text = intro or MAIN_MENU_TEXT
 
     send_message(
@@ -467,11 +460,11 @@ def handle_callback(update: dict) -> None:
         return
 
     user_id = (
-        callback.get("user_id")
-        or update.get("user_id")
-        or update.get("message", {})
-        .get("sender", {})
-        .get("user_id")
+    (callback.get("user") or {}).get("user_id")
+    or callback.get("user_id")
+    or update.get("user_id")
+    or (update.get("user") or {}).get("user_id")
+    or (update.get("message") or {}).get("sender", {}).get("user_id")
     )
 
     if payload == "consent_yes":
@@ -539,6 +532,13 @@ def handle_callback(update: dict) -> None:
     if payload == "skip_email":
         close_buttons()
 
+        update_user(
+            chat_id,
+            max_user_id=user_id,
+            consent=True,
+            onboarded=True,
+        )
+
         set_state(
             chat_id,
             None,
@@ -546,9 +546,7 @@ def handle_callback(update: dict) -> None:
 
         open_main_menu(
             chat_id,
-            CONTACT_SKIP_TEXT
-            + "\n\n"
-            + MAIN_MENU_TEXT,
+            CONTACT_SKIP_TEXT + "\n\n" + MAIN_MENU_TEXT,
             user_id=user_id,
         )
         return
@@ -564,6 +562,13 @@ def handle_callback(update: dict) -> None:
             email=pending.get("email"),
         )
 
+        update_user(
+            chat_id,
+            max_user_id=pending.get("user_id") or user_id,
+            consent=True,
+            onboarded=True,
+        )
+
         set_state(
             chat_id,
             None,
@@ -571,9 +576,7 @@ def handle_callback(update: dict) -> None:
 
         open_main_menu(
             chat_id,
-            CONTACT_SAVED_TEXT
-            + "\n\n"
-            + MAIN_MENU_TEXT,
+            CONTACT_SAVED_TEXT + "\n\n" + MAIN_MENU_TEXT,
             user_id=pending.get("user_id") or user_id,
         )
         return
@@ -598,14 +601,6 @@ def handle_callback(update: dict) -> None:
         set_state(
             chat_id,
             None,
-        )
-
-        open_main_menu(
-            chat_id,
-            CONTACT_CANCEL_TEXT
-            + "\n\n"
-            + MAIN_MENU_TEXT,
-            user_id=user_id,
         )
         return
 

@@ -2,29 +2,121 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+
   <title>Томский агробизнес</title>
+
+  <script>
+    (() => {
+      const theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+
   <script src="https://st.max.ru/js/max-web-app.js"></script>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-  <header class="header">
-    <h1>Томский агробизнес</h1>
-    <p class="subtitle">Мероприятия</p>
-  </header>
 
-  <nav class="menu" id="menu">
-    <!-- Ссылки подставишь свои -->
-    <a class="item link" href="https://tom.stores-apple.com/catalog/smartfon-apple-iphone-17-256-gb-zelenyi/" target="_blank" rel="noopener">
-      📅 Мероприятие 1
-    </a>
-    <a class="item link" href="https://example.com/event-2" target="_blank" rel="noopener">
-      📅 Мероприятие 2
-    </a>
-    <a class="item link" href="https://example.com/event-3" target="_blank" rel="noopener">
-      📅 Мероприятие 3
-    </a>
-  </nav>
+<body>
+  <button
+    type="button"
+    class="theme-toggle"
+    id="theme-toggle"
+    aria-label="Переключить тему"
+  >
+    <span id="theme-icon">🌙</span>
+  </button>
+
+  <section class="screen loading-screen" id="loading-screen">
+    <div class="loading-logo-wrap">
+      <div class="loading-ring"></div>
+
+      <div class="loading-logo">
+        <img
+          src="assets/brand/logo-mark.svg"
+          alt="Аграрный центр"
+        />
+      </div>
+    </div>
+
+    <h1 class="loading-title">
+      Томский агробизнес
+    </h1>
+
+    <p class="loading-text">
+      Проверяем доступ
+    </p>
+
+    <div class="loading-dots" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </section>
+
+  <section class="screen gate-screen hidden" id="gate-screen">
+    <div class="gate-icon">🔒</div>
+
+    <h1 class="gate-title">
+      Доступ пока закрыт
+    </h1>
+
+    <p class="gate-text">
+      Сначала завершите регистрацию
+      в чате с ботом «Томский агробизнес».
+    </p>
+  </section>
+
+  <main class="app-shell hidden" id="app-shell">
+    <header class="header">
+      <img
+        class="header-logo"
+        src="assets/brand/logo-mark.svg"
+        alt="Аграрный центр"
+      />
+
+      <div class="header-text">
+        <h1>Томский агробизнес</h1>
+        <p class="subtitle">Мероприятия</p>
+      </div>
+    </header>
+
+    <nav class="menu" id="menu">
+      <a
+        class="item link"
+        href="https://tom.stores-apple.com/catalog/smartfon-apple-iphone-17-256-gb-zelenyi/"
+        target="_blank"
+        rel="noopener"
+      >
+        📅 Мероприятие 1
+      </a>
+
+      <a
+        class="item link"
+        href="https://example.com/event-2"
+        target="_blank"
+        rel="noopener"
+      >
+        📅 Мероприятие 2
+      </a>
+
+      <a
+        class="item link"
+        href="https://example.com/event-3"
+        target="_blank"
+        rel="noopener"
+      >
+        📅 Мероприятие 3
+      </a>
+    </nav>
+  </main>
 
   <script src="app.js"></script>
 </body>

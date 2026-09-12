@@ -1,54 +1,167 @@
-function getStartPayload() {
-  try {
-    const p = window.WebApp?.initDataUnsafe?.start_param;
-    if (p) return String(p);
-  } catch (_) {}
-  try {
-    const q = new URLSearchParams(window.location.search);
-    return q.get("payload") || q.get("startapp") || "";
-  } catch (_) {
-    return "";
-  }
-}
+const API_BASE = "https://muskiness-obtrusive-lumping.ngrok-free.dev";
 
-function isOnboarded() {
-  // TODO: включить проверку, когда будет бэкенд или стабильный start_param
-  return true;
+const loadingScreen = document.getElementById("loading-screen");
+const gateScreen = document.getElementById("gate-screen");
+const appShell = document.getElementById("app-shell");
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = document.getElementById("theme-icon");
+
+function showLoading() {
+  loadingScreen?.classList.remove("hidden");
+  gateScreen?.classList.add("hidden");
+  appShell?.classList.add("hidden");
 }
 
 function showGate() {
-  document.body.innerHTML = `
-    <div style="padding:24px;font-family:system-ui,sans-serif;background:#0f1419;color:#e7ecf3;min-height:100vh">
-      <h1 style="font-size:1.2rem;margin:0 0 12px">Доступ пока закрыт</h1>
-      <p style="color:#8b9bb4;line-height:1.5;margin:0">
-        Сначала в чате с ботом примите политику и укажите email
-        или нажмите «Пропустить». Затем откройте приложение кнопкой в сообщении бота.
+  loadingScreen?.classList.add("hidden");
+  appShell?.classList.add("hidden");
+  gateScreen?.classList.remove("hidden");
+}
+
+function showApp() {
+  loadingScreen?.classList.add("hidden");
+  gateScreen?.classList.add("hidden");
+  appShell?.classList.remove("hidden");
+}
+
+function showError(message) {
+  loadingScreen?.classList.add("hidden");
+  appShell?.classList.add("hidden");
+  gateScreen?.classList.remove("hidden");
+
+  if (gateScreen) {
+    gateScreen.innerHTML = `
+      <div class="gate-icon">⚠️</div>
+
+      <h1 class="gate-title">
+        Не удалось проверить доступ
+      </h1>
+
+      <p class="gate-text">
+        ${message}
       </p>
-    </div>
-  `;
+    `;
+  }
+}
+
+function getSystemTheme() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+
+  if (themeIcon) {
+    themeIcon.textContent = theme === "dark" ? "☀️" : "🌙";
+  }
+
+  themeToggle?.setAttribute(
+    "aria-label",
+    theme === "dark"
+      ? "Включить светлую тему"
+      : "Включить тёмную тему"
+  );
+}
+
+function initTheme() {
+  applyTheme(
+    document.documentElement.dataset.theme || getSystemTheme()
+  );
+
+  themeToggle?.addEventListener("click", () => {
+    const currentTheme =
+      document.documentElement.dataset.theme || getSystemTheme();
+
+    const nextTheme =
+      currentTheme === "dark"
+        ? "light"
+        : "dark";
+
+    applyTheme(nextTheme);
+  });
 }
 
 function initApp() {
+  showApp();
+
   try {
     window.WebApp?.ready?.();
   } catch (e) {
     console.warn(e);
   }
 
-  // Ссылки внутри MAX лучше открывать через Bridge, если есть
   document.getElementById("menu")?.addEventListener("click", (e) => {
-    const a = e.target.closest("a[href]");
-    if (!a) return;
-    const url = a.href;
+    const link = e.target.closest("a[href]");
+
+    if (!link) return;
+
     if (window.WebApp?.openLink) {
       e.preventDefault();
-      window.WebApp.openLink(url);
+      window.WebApp.openLink(link.href);
     }
   });
 }
 
-if (!isOnboarded()) {
-  showGate();
-} else {
-  initApp();
+async function checkAccess() {
+  showLoading();
+
+  try {
+    window.WebApp?.ready?.();
+  } catch (_) {}
+
+  const initData = window.WebApp?.initData;
+
+  if (!initData) {
+    showGate();
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/api/auth`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        initData,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+
+      console.error(
+        "Ошибка авторизации:",
+        response.status,
+        error
+      );
+
+      showGate();
+      return;
+    }
+
+    const result = await response.json();
+
+    console.log("Результат проверки:", result);
+
+    if (result.authenticated && result.allowed) {
+      initApp();
+    } else {
+      showGate();
+    }
+  } catch (error) {
+    console.error(
+      "Не удалось проверить доступ:",
+      error
+    );
+
+    showError(
+      "Проверьте, что сервер приложения доступен."
+    );
+  }
 }
+
+initTheme();
+checkAccess();
